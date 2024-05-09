@@ -1,50 +1,46 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Form, FormGroup, Row, Col } from "react-bootstrap";
 import AlertMessage from "../components/AlertMessage";
-import { credentials } from "../credentials";
-import { users } from "../users";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../actions/userActions";
+import { useNavigate } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
 
-const LoginPage = ({ history }) => {
+const LoginPage = () => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [error, setError] = React.useState("");
-  const [success, setSuccess] = React.useState("");
+
+  const dispatch = useDispatch();
 
   const handleUsernameChange = (event) => {
-    setError("");
     setUsername(event.target.value);
   };
 
   const handlePasswordChange = (event) => {
-    setError("");
     setPassword(event.target.value);
   };
 
+  const userLogin = useSelector((state) => state.login);
+  const { loading, success, error, userInfo } = userLogin;
+
+  // console.log(loading, success, error, userInfo);
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (username === "" || password === "") {
-      setError("Username and password are required");
-    } else {
-      const creds = credentials;
-      if (!creds) {
-        setError("Not able to perform sign in operation");
-      } else if (creds[username] && creds[username] === password) {
-        setError("");
-        setSuccess("Successfully logged in");
-
-        const userObject = users.filter(
-          (user) => user.username === username
-        )[0];
-        sessionStorage.setItem("loggedInUser", JSON.stringify(userObject));
-        window.location.reload();
-      } else {
-        setError("Username or password is incorrect");
-      }
-    }
+    dispatch(login(username, password));
   };
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate('/')
+    }
+  });
 
   return (
     <>
+      {loading && <Spinner animation="grow" />}
       {error && <AlertMessage variant="danger" message={error} />}
       {success && <AlertMessage variant="success" message={success} />}
       <FormGroup className="mb-3">
@@ -73,10 +69,6 @@ const LoginPage = ({ history }) => {
       >
         Login
       </Button>
-      <Row>        <Col className="mb-3">
-        Don't have an account? Register
-      </Col>
-      </Row>
     </>
   );
 };
