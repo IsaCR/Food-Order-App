@@ -5,7 +5,7 @@ const AlertMessage = (props) => {
   return (
     <>
       <Alert variant={props.variant} key={props.variant}>
-        <i class="bi bi-exclamation-diamond-fill"> {props.message}</i>
+        <i className="bi bi-exclamation-diamond-fill"> {props.message}</i>
       </Alert>
     </>
   );

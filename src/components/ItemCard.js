@@ -2,7 +2,7 @@ import React from "react";
 import { Card, Image } from 'react-bootstrap'
 
 const ItemCard = (props) => {
-  console.log(props.itemName)
+  // console.log(props.itemName)
   return (
     <Card as="div" border="white" className="p-3 my-3 rounded">
       {props.itemName == "cuisine" && <Image variant="top" src={props.item.image} width={100} height={100} className="mx-auto d-block" style={{ borderRadius: '10px 25px' }} />}
